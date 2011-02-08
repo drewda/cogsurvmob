@@ -58,18 +58,18 @@ else
 	//  SET DISTANCE FILTER.  THIS DICTATES HOW OFTEN AN EVENT FIRES BASED ON THE DISTANCE THE DEVICE MOVES
 	//  THIS VALUE IS IN METERS
 	//
-	Titanium.Geolocation.distanceFilter = 10;
+	Titanium.Geolocation.distanceFilter = 1;
 
 	//
 	// GET CURRENT POSITION - THIS FIRES ONCE
 	//
 	Titanium.Geolocation.getCurrentPosition(function(e)
 	{
-		if (!e.success || e.error)
-		{
-			alert('error ' + JSON.stringify(e.error));
-			return;
-		}
+    if (!e.success || e.error)
+    {
+     alert('error ' + JSON.stringify(e.error));
+     return;
+    }
 
 		longitude = e.coords.longitude;
 		latitude = e.coords.latitude;
@@ -80,28 +80,33 @@ else
 		timestamp = e.coords.timestamp;
 		altitudeAccuracy = e.coords.altitudeAccuracy;
 		
-		waitForLocation.hide();
+		Titanium.API.info('current location (lon: ' + longitude + ', lat: ' + latitude + ')');
+		
+    waitForLocation.hide();
 	});
 
 	//
 	// EVENT LISTENER FOR GEO EVENTS - THIS WILL FIRE REPEATEDLY (BASED ON DISTANCE FILTER)
 	//
-	Titanium.Geolocation.addEventListener('location',function(e) {
-		if (!e.success || e.error) {
-			return;
-		}
-
-	  longitude = e.coords.longitude;
-	  latitude = e.coords.latitude;
-	  altitude = e.coords.altitude;
-	  heading = e.coords.heading;
-	  accuracy = e.coords.accuracy;
-	  speed = e.coords.speed;
-	  timestamp = e.coords.timestamp;
-	  altitudeAccuracy = e.coords.altitudeAccuracy;
-		
-	  waitForLocation.hide();
-	});
+  // var locationChange = function(e) {
+  //   if (!e.success || e.error) {
+  //    return;
+  //  }
+  // 
+  //   longitude = e.coords.longitude;
+  //   latitude = e.coords.latitude;
+  //   altitude = e.coords.altitude;
+  //   heading = e.coords.heading;
+  //   accuracy = e.coords.accuracy;
+  //   speed = e.coords.speed;
+  //   timestamp = e.coords.timestamp;
+  //   altitudeAccuracy = e.coords.altitudeAccuracy;
+  //   
+  //   Titanium.API.info('geo updated (lon: ' + longitude + ', lat: ' + latitude + ')');
+  //  
+  //   waitForLocation.hide();
+  // };
+	Titanium.Geolocation.addEventListener('location', Location.locationChange);
 }
 
 var newLandmarkNameTextField = Ti.UI.createTextField({
@@ -144,11 +149,20 @@ loginButton.addEventListener('click', function(e) {
     CogSurver.request("POST", "landmarks", params, function(event) {
       CogSurver.markingLandmarkActivityIndicator.hide();
       Ti.App.currentLandmark = JSON.parse(this.responseText).landmark;
-      // Titanium.Geolocation.removeEventListener('location');
+      Titanium.Geolocation.removeEventListener('location', Location.locationChange);
       Windows.visitLandmark();
       win.close();
     }, function() {
       CogSurver.markingLandmarkActivityIndicator.hide();
     });
   }
+});
+
+win.addEventListener('close', function() {
+  Ti.API.info('CLOSING THE WINDOW');
+  Titanium.Geolocation.removeEventListener('location', locationChange);
+});
+win.addEventListener('hide', function() {
+  Ti.API.info('HIDING THE WINDOW');
+  Titanium.Geolocation.removeEventListener('location', locationChange);
 });

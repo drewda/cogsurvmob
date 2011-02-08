@@ -59,6 +59,27 @@ var CurrentUser = {
   }
 };
 
+var Location = {
+  locationChange: function(e) {
+	  if (!e.success || e.error) {
+			return;
+		}
+
+	  longitude = e.coords.longitude;
+	  latitude = e.coords.latitude;
+	  altitude = e.coords.altitude;
+	  heading = e.coords.heading;
+	  accuracy = e.coords.accuracy;
+	  speed = e.coords.speed;
+	  timestamp = e.coords.timestamp;
+	  altitudeAccuracy = e.coords.altitudeAccuracy;
+	  
+	  Titanium.API.info('geo updated (lon: ' + longitude + ', lat: ' + latitude + ')');
+		
+	  waitForLocation.hide();
+  }
+};
+
 /* WINDOWS */
 var Windows = {
   signIn: function() {
@@ -90,6 +111,11 @@ var Windows = {
       title: 'Mark Landmark',
       url: "/main_windows/mark_landmark.js",
       navBarHidden: false
+    });
+    markLandmarkWindow.addEventListener('close', function(e) {
+      // this isn't working right now
+      Ti.API.info('markLandmarkWindow closed');
+      Titanium.Geolocation.removeEventListener('location', Location.locationChange);
     });
     markLandmarkWindow.open();
   },

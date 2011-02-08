@@ -32,7 +32,7 @@ if (Titanium.Geolocation.hasCompass) {
     Titanium.API.info('geo - current heading: ' + trueHeading);
   });
 
-  headingChange = function(e) {
+  var headingChange = function(e) {
     if (e.error) {
       Titanium.API.info("error: " + e.error);
       return;
@@ -48,7 +48,7 @@ if (Titanium.Geolocation.hasCompass) {
 
     Titanium.API.info('geo - heading updated: ' + trueHeading);
   };
-  Titanium.Geolocation.addEventListener('heading',headingChange);
+  Titanium.Geolocation.addEventListener('heading', headingChange);
 }
 else {
   Ti.UI.createAlertDialog({title:'No Compass', message:'This is a problem. Your device does not have a compass.'}).show();
@@ -359,6 +359,7 @@ else {
         Ti.API.info('Ti.App.estimateTargets.length: ' + Ti.App.estimateTargets.length);
         if (Ti.App.currentEstimateTargetIndex < lastEstimateTargetIndex) {
           Ti.App.currentEstimateTargetIndex = Ti.App.currentEstimateTargetIndex + 1;
+          Titanium.Geolocation.removeEventListener('heading', headingChange);
           Windows.makeEstimate();
           Ti.UI.createNotification({
               duration: 3000,

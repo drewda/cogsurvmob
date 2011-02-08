@@ -88,4 +88,6 @@ params = {'landmark_visit[landmark_id]': Ti.App.currentLandmark.id};
 CogSurver.request("POST", "landmark_visits", params, function(event) {
  recordingLandmarkVisitActivityIndicator.hide();
  Ti.App.currentLandmarkVisitId = JSON.parse(this.responseText).landmark_visit.id;
+}, function(event) {
+  recordingLandmarkVisitActivityIndicator.hide();
 });
