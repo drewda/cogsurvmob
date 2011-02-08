@@ -1,4 +1,4 @@
-Ti.include('/imports.js');
+Titanium.include('../utils.js');
 
 Ti.UI.setBackgroundColor('#fff');
 
@@ -25,6 +25,10 @@ var altitudeAccuracy;
 
 var waitForLocation = Ti.UI.createActivityIndicator({ message: "Trying to determine your current position..." });
 waitForLocation.show();
+
+if (Ti.Platform.name == "iPhone OS") {
+  Ti.Geolocation.purpose = "Marking a new landmark.";
+}
 
 if (Ti.Geolocation.locationServicesEnabled == false) {
 	Ti.UI.createAlertDialog({title:'GPS Error', message:'Your device has its GPS turned off. Please turn it on.'}).show();
@@ -63,7 +67,6 @@ else
 	{
 		if (!e.success || e.error)
 		{
-			currentLocation.text = 'error: ' + JSON.stringify(e.error);
 			alert('error ' + JSON.stringify(e.error));
 			return;
 		}
@@ -76,6 +79,8 @@ else
 		speed = e.coords.speed;
 		timestamp = e.coords.timestamp;
 		altitudeAccuracy = e.coords.altitudeAccuracy;
+		
+		waitForLocation.hide();
 	});
 
 	//
@@ -127,13 +132,23 @@ loginButton.addEventListener('click', function(e) {
     waitForLocation.show();
   }
   else if (!newLandmarkNameTextField.value) {
-    alert('Please try a name for your new landmark.');
+    alert('Please type a name for your new landmark.');
   }
   else {
-    CogSurver.markLandmark(newLandmarkNameTextField.value, latitude, longitude); 
+    var markingLandmarkActivityIndicator = Ti.UI.createActivityIndicator({ message: "Sending your new landmark to the server..." });
+    // CogSurver.markLandmark(newLandmarkNameTextField.value, latitude, longitude); 
+    markingLandmarkActivityIndicator.show();
+    params = {'landmark[name]': newLandmarkNameTextField.value, 
+              'landmark[latitude]': latitude,
+              'landmark[longitude]': longitude};
+    CogSurver.request("POST", "landmarks", params, function(event) {
+      CogSurver.markingLandmarkActivityIndicator.hide();
+      Ti.App.currentLandmark = JSON.parse(this.responseText).landmark;
+      // Titanium.Geolocation.removeEventListener('location');
+      Windows.visitLandmark();
+      win.close();
+    }, function() {
+      CogSurver.markingLandmarkActivityIndicator.hide();
+    });
   }
-});
-Ti.API.addEventListener(Events.landmarkMarked, function() {
-  CogSurver.visitLandmark(Ti.App.currentLandmark.id);
-  win.close();
 });

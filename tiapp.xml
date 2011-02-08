@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
 <id>com.cocogeo.cogsurv</id>
-<name>cogsurvmob</name>
-<version>1.0</version>
+<name>Cognitive Surveyor</name>
+<version>1.0.1</version>
 <publisher>CoCoGeo</publisher>
 <url>http://www.cognitivesurveyor.org/</url>
 <description>Cognitive Surveyor</description>

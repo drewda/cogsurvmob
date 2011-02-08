@@ -1,4 +1,4 @@
-Titanium.include('/imports.js');
+Titanium.include('../utils.js');
 
 var win = Titanium.UI.currentWindow;
 
@@ -47,7 +47,6 @@ loginReq.onload = function()
 {
 	var json = this.responseText;
 	var response = JSON.parse(json);
-	alert("Welcome " + response[0].user.first_name + ". Your email is: " + response[0].user.email);
 	CurrentUser.setEmail(response[0].user.email);
 	CurrentUser.setId(response[0].user.id);
 	CurrentUser.setPassword(passwordTextField.value);

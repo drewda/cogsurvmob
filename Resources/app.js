@@ -1,4 +1,4 @@
-Titanium.include('/imports.js');
+Titanium.include('utils.js');
 
 Titanium.UI.setBackgroundColor('#fff');
 
