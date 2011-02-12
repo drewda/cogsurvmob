@@ -168,7 +168,7 @@ else {
   });
   distanceAddButtonsView.add(distanceAddHundredButton);
   distanceAddHundredButton.addEventListener('click', function(event) {
-    distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) + 100);
+    distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) + 100).toFixed(1);
   });
   var distanceAddTenButton = Ti.UI.createButton({
     title: "+ 10",
@@ -178,7 +178,7 @@ else {
   });
   distanceAddButtonsView.add(distanceAddTenButton);
   distanceAddTenButton.addEventListener('click', function(event) {
-    distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) + 10);
+    distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) + 10).toFixed(1);
   });
   var distanceAddOneButton = Ti.UI.createButton({
     title: "+ 1",
@@ -188,7 +188,7 @@ else {
   });
   distanceAddButtonsView.add(distanceAddOneButton);
   distanceAddOneButton.addEventListener('click', function(event) {
-    distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) + 1);
+    distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) + 1).toFixed(1);
   });
   var distanceAddTenthButton = Ti.UI.createButton({
     title: "+ 0.1",
@@ -198,7 +198,7 @@ else {
   });
   distanceAddButtonsView.add(distanceAddTenthButton);
   distanceAddTenthButton.addEventListener('click', function(event) {
-    distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) + 0.1);
+    distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) + 0.1).toFixed(1);
   });
   verticalView.add(distanceAddButtonsView);
 
@@ -260,8 +260,8 @@ else {
   });
   distanceSubtractButtonsView.add(distanceSubtractHundredButton);
   distanceSubtractHundredButton.addEventListener('click', function(event) {
-    if (parseFloat(distanceNumberTextField.value) > 100) {
-      distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) - 100);
+    if (Number(distanceNumberTextField.value) > 100) {
+      distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) - 100).toFixed(1);
     }
     else {
       distanceNumberTextField.value = "0.0";
@@ -275,8 +275,8 @@ else {
   });
   distanceSubtractButtonsView.add(distanceSubtractTenButton);
   distanceSubtractTenButton.addEventListener('click', function(event) {
-    if (parseFloat(distanceNumberTextField.value) > 10) {
-      distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) - 10);
+    if (Number(distanceNumberTextField.value) > 10) {
+      distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) - 10).toFixed(1);
     }
     else {
       distanceNumberTextField.value = "0.0";
@@ -290,8 +290,8 @@ else {
   });
   distanceSubtractButtonsView.add(distanceSubtractOneButton);
   distanceSubtractOneButton.addEventListener('click', function(event) {
-    if (parseFloat(distanceNumberTextField.value) > 1) {
-      distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) - 1);
+    if (Number(distanceNumberTextField.value) > 1) {
+      distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) - 1).toFixed(1);
     }
     else {
       distanceNumberTextField.value = "0.0";
@@ -305,8 +305,8 @@ else {
   });
   distanceSubtractButtonsView.add(distanceSubtractTenthButton);
   distanceSubtractTenthButton.addEventListener('click', function(event) {
-    if (parseFloat(distanceNumberTextField.value) > 0.1) {
-      distanceNumberTextField.value = String(parseFloat(distanceNumberTextField.value) - 0.1);
+    if (Number(distanceNumberTextField.value) > 0.1) {
+      distanceNumberTextField.value = Number(Number(distanceNumberTextField.value) - 0.1).toFixed(1);
     }
     else {
       distanceNumberTextField.value = "0.0";
