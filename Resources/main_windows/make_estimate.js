@@ -316,7 +316,7 @@ else {
 
   var instructions3Label = Titanium.UI.createLabel({
     text: 'Estimate the direction by pointing your phone.',
-    top: 10,
+    top: 50,
     left: 10,
     right: 10,
     width: 300,
