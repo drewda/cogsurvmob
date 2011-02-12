@@ -145,19 +145,21 @@ var CogSurver = {
       format = "json";
     }
     
-    xhr = Ti.Network.createHTTPClient();
-    xhr.onload = onLoadFunction;
-    xhr.onerror = function(e)
-    {
+    if (Ti.App.xhr != null) {
+      Ti.App.xhr.abort();
+    }
+    Ti.App.xhr = Ti.Network.createHTTPClient();
+    Ti.App.xhr.onload = onLoadFunction;
+    Ti.App.xhr.onerror = function(e) {
       Ti.API.info("ERROR " + e.error);
       alert(e.error); 
       onErrorFunction();
     };
-    xhr.open(action, CogSurver.url + url + "." + format);
-    xhr.setRequestHeader(
+    Ti.App.xhr.open(action, CogSurver.url + url + "." + format);
+    Ti.App.xhr.setRequestHeader(
         'Authorization', 
         'Basic ' + Ti.Utils.base64encode(CurrentUser.getEmail()+':'+CurrentUser.getPassword()));
-    return xhr.send(params);
+    return data = Ti.App.xhr.send(params);
   },
   
   /* LANDMARKS */
