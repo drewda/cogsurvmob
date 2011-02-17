@@ -46,7 +46,7 @@ if (Titanium.Geolocation.hasCompass) {
     trueHeading = e.heading.trueHeading % 360;
     var timestamp = e.heading.timestamp;
 
-    Titanium.API.info('geo - heading updated: ' + trueHeading);
+    Titanium.API.info('geo - heading updated; magnetic: ' + e.heading.magneticHeading + ' true (%360): ' + trueHeading);
   };
   Titanium.Geolocation.addEventListener('heading', headingChange);
 }
@@ -341,6 +341,12 @@ else {
         buttonNames: ["OK"]
       }).show();
     }
+    else if (!trueHeading || trueHeading == 0) {
+      Ti.UI.createAlertDialog({
+        message: "Your compass doesn't seem to be working. Please try again.",
+        buttonNames: ["OK"]
+      }).show();
+    }
     else {
       var recordingEstimateIndicator = Ti.UI.createActivityIndicator({ message: "Sending your estimate to the server..." });
       recordingEstimateIndicator.show();
@@ -365,6 +371,7 @@ else {
               duration: 3000,
               message: "Great guess! Can you make an estimate to your next landmark? (If not, open the menu to skip.)"
           }).show();
+          Ti.App.xhr.abort();
           win.close();
         }
         else {

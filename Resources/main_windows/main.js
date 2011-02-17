@@ -1,7 +1,5 @@
 Titanium.include('../utils.js');
 
-Titanium.UI.setBackgroundColor('#fff');
-
 var win = Titanium.UI.currentWindow;
 
 var label = Titanium.UI.createLabel({

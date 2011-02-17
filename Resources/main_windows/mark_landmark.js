@@ -145,7 +145,8 @@ loginButton.addEventListener('click', function(e) {
     markingLandmarkActivityIndicator.show();
     params = {'landmark[name]': newLandmarkNameTextField.value, 
               'landmark[latitude]': latitude,
-              'landmark[longitude]': longitude};
+              'landmark[longitude]': longitude,
+              'landmark[fix_accuracy]': accuracy };
     CogSurver.request("POST", "landmarks", params, function(event) {
       CogSurver.markingLandmarkActivityIndicator.hide();
       Ti.App.currentLandmark = JSON.parse(this.responseText).landmark;
@@ -153,7 +154,7 @@ loginButton.addEventListener('click', function(e) {
       Windows.visitLandmark();
       win.close();
     }, function() {
-      CogSurver.markingLandmarkActivityIndicator.hide();
+      markingLandmarkActivityIndicator.hide();
     });
   }
 });

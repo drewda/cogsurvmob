@@ -75,6 +75,7 @@ wrongLandmarkButton.addEventListener('click', function(event) {
    Ti.App.currentLandmarkVisitId = null;
    win.close();
    Windows.selectLandmark();
+   Ti.App.xhr.abort();
   }, function() {
     deletingLandmarkVisitActivityIndicator.hide();    
   }, "xml");
@@ -88,6 +89,7 @@ params = {'landmark_visit[landmark_id]': Ti.App.currentLandmark.id};
 CogSurver.request("POST", "landmark_visits", params, function(event) {
  recordingLandmarkVisitActivityIndicator.hide();
  Ti.App.currentLandmarkVisitId = JSON.parse(this.responseText).landmark_visit.id;
+ Ti.App.xhr.abort();
 }, function(event) {
   recordingLandmarkVisitActivityIndicator.hide();
 });

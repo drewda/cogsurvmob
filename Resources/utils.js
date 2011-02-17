@@ -145,21 +145,22 @@ var CogSurver = {
       format = "json";
     }
     
-    if (Ti.App.xhr != null) {
-      Ti.App.xhr.abort();
-    }
+    // if (Ti.App.xhr != null) {
+    //   Ti.App.xhr.abort();
+    // }
     Ti.App.xhr = Ti.Network.createHTTPClient();
     Ti.App.xhr.onload = onLoadFunction;
     Ti.App.xhr.onerror = function(e) {
+      onErrorFunction();
       Ti.API.info("ERROR " + e.error);
       alert(e.error); 
-      onErrorFunction();
+      Ti.App.xhr.abort();
     };
     Ti.App.xhr.open(action, CogSurver.url + url + "." + format);
     Ti.App.xhr.setRequestHeader(
         'Authorization', 
         'Basic ' + Ti.Utils.base64encode(CurrentUser.getEmail()+':'+CurrentUser.getPassword()));
-    return data = Ti.App.xhr.send(params);
+    return Ti.App.xhr.send(params);
   },
   
   /* LANDMARKS */

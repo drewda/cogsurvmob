@@ -45,6 +45,7 @@ CogSurver.request("GET", "landmarks", {}, function(event) {
 	landmarksTableView.setData(Ti.App.landmarks);
   Ti.App.fireEvent("landmarksLoaded", {});  //TODO
   loadingLandmarksActivityIndicator.hide();
+  Ti.App.xhr.abort();
 }, function() {
   loadingLandmarksActivityIndicator.hide();  
 });
