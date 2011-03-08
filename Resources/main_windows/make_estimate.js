@@ -5,9 +5,9 @@ Titanium.UI.setBackgroundColor('#fff');
 var win = Titanium.UI.currentWindow;
 
 /* CALIBRATION ALERT */
-if (Ti.App.currentEstimateTargetIndex == 0) {
-  alert('Wave the phone around in a figure 8. This resets the compass.');
-}
+// if (Ti.App.currentEstimateTargetIndex == 0) {
+//   alert('Wave the phone around in a figure 8. This resets the compass.');
+// }
 
 /* COMPASS */
 var trueHeading;
@@ -82,12 +82,25 @@ northEstimate.addEventListener('click', function(event) {
   }
 });
 
+var compassCalibrationAlertDialog = Ti.UI.createAlertDialog({
+  title: 'Compass Calibration',
+  message: "Before you make direction and distance estimates, please calibrate your phone's compass. To do this, wave your phone around in a figure-8 pattern now.",
+  buttonNames: ["Done"]
+});
+
 // if this is the first landmark being marked, skip to north estimate
 if (Ti.App.estimateTargets.length == 0) {
-  northEstimate.show();
+  compassCalibrationAlertDialog.show();
+  compassCalibrationAlertDialog.addEventListener('click', function(event) {
+    northEstimate.show();
+  });
 }
 // otherwise, we'll actually go and draw the whole screen
 else {
+  if (Ti.App.currentEstimateTargetIndex == 0) {
+    compassCalibrationAlertDialog.show();
+  }
+  
   var verticalView = Titanium.UI.createView({
     height:'auto', 
     layout:'vertical', 
