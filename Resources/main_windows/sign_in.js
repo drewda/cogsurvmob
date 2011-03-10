@@ -23,8 +23,8 @@ var passwordTextField = Titanium.UI.createTextField({
 	height:60,
 	hintText:'Password',
 	passwordMask:true,
-	keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
-	returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
+  // keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
+  // returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
 });
 win.add(passwordTextField);
@@ -42,9 +42,10 @@ win.add(loginButton);
 /*
 * Login Event Handling
 */
+var loggingInActivityIndicator = Ti.UI.createActivityIndicator({ message: "Logging in to the server..." });
 var loginReq = Titanium.Network.createHTTPClient();
-loginReq.onload = function()
-{
+loginReq.onload = function() {
+  loggingInActivityIndicator.hide();
 	var json = this.responseText;
 	var response = JSON.parse(json);
 	CurrentUser.setEmail(response[0].user.email);
@@ -55,8 +56,8 @@ loginReq.onload = function()
 	Windows.main();
 };
 
-loginReq.onerror = function(e)
-{
+loginReq.onerror = function(e) {
+  loggingInActivityIndicator.hide();
   Ti.API.info("ERROR " + e.error);
   if (e.error == "Authorization Required") {
     alert("Check your e-mail address and your password.");
@@ -70,19 +71,17 @@ loginReq.onerror = function(e)
 * Login Button Click Event
 */
 
-loginButton.addEventListener('click',function(e)
-{
-	if (emailTextField.value != '' && passwordTextField.value != '')
-	{
+loginButton.addEventListener('click',function(e) {
+	if (emailTextField.value != '' && passwordTextField.value != '') {
 		loginReq.open("GET","https://cogsurv.com/api/users.json");
 		loginReq.setRequestHeader("Accept", "application/json");
 		loginReq.setRequestHeader(
         'Authorization', 
         'Basic ' + Ti.Utils.base64encode(emailTextField.value+':'+passwordTextField.value));
 		loginReq.send();
+		loggingInActivityIndicator.show();
 	}
-	else
-	{
+	else {
 		alert("Username/Password are required");
 	}
 });

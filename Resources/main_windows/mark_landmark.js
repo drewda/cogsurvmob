@@ -41,13 +41,13 @@ else
 		if (authorization == Ti.Geolocation.AUTHORIZATION_DENIED) {
 			Ti.UI.createAlertDialog({
 				title:'GPS Error',
-				message:'You are not giving Cognitive Surveyor to access your location.'
+				message:'You are not giving Cognitive Surveyor permission to access your location.'
 			}).show();
 		}
 		else if (authorization == Ti.Geolocation.AUTHORIZATION_RESTRICTED) {
 			Ti.UI.createAlertDialog({
 				title:'GPS Error',
-				message:'You are not giving Cognitive Surveyor to access your location.'
+				message:'You are not giving Cognitive Surveyor permission to access your location.'
 			}).show();
 		}
 	}

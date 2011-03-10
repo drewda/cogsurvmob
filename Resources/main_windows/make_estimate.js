@@ -4,10 +4,64 @@ Titanium.UI.setBackgroundColor('#fff');
 
 var win = Titanium.UI.currentWindow;
 
-/* CALIBRATION ALERT */
-// if (Ti.App.currentEstimateTargetIndex == 0) {
-//   alert('Wave the phone around in a figure 8. This resets the compass.');
-// }
+/* CURRENT LOCATION */
+// we want to get this so that we have a location stored away for applying the declination correction to the compass heading
+var waitForLocation = Ti.UI.createActivityIndicator({ message: "Trying to determine your current position..." });
+waitForLocation.show();
+
+if (Ti.Platform.name == "iPhone OS") {
+  Ti.Geolocation.purpose = "Determining location in order to correct compass heading.";
+}
+
+if (Ti.Geolocation.locationServicesEnabled == false) {
+	Ti.UI.createAlertDialog({title:'GPS Error', message:'Your device has its GPS turned off. Please turn it on.'}).show();
+}
+else {
+	if (Ti.Platform.name != 'android') {
+		var authorization = Ti.Geolocation.locationServicesAuthorization;
+		Ti.API.log('Authorization: '+authorization);
+		if (authorization == Ti.Geolocation.AUTHORIZATION_DENIED) {
+			Ti.UI.createAlertDialog({
+				title:'GPS Error',
+				message:'You are not giving Cognitive Surveyor permission to access your location.'
+			}).show();
+		}
+		else if (authorization == Ti.Geolocation.AUTHORIZATION_RESTRICTED) {
+			Ti.UI.createAlertDialog({
+				title:'GPS Error',
+				message:'You are not giving Cognitive Surveyor permission to access your location.'
+			}).show();
+		}
+	}
+
+	Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_KILOMETER;
+
+	//
+	// GET CURRENT POSITION - THIS FIRES ONCE
+	//
+	Titanium.Geolocation.getCurrentPosition(function(e)
+	{
+    if (!e.success || e.error)
+    {
+     alert('error ' + JSON.stringify(e.error));
+     return;
+    }
+
+		var longitude = e.coords.longitude;
+		var latitude = e.coords.latitude;
+		var altitude = e.coords.altitude;
+		var heading = e.coords.heading;
+		var accuracy = e.coords.accuracy;
+		var speed = e.coords.speed;
+		var timestamp = e.coords.timestamp;
+		var altitudeAccuracy = e.coords.altitudeAccuracy;
+		
+		Titanium.API.info('current location (lon: ' + longitude + ', lat: ' + latitude + ')');
+		
+    waitForLocation.hide();
+	});
+}
+
 
 /* COMPASS */
 var trueHeading;
@@ -18,7 +72,7 @@ if (Titanium.Geolocation.hasCompass) {
 
   Ti.Geolocation.getCurrentHeading(function(e) {
     if (e.error) {
-      currentHeading.text = 'error: ' + e.error;
+      alert('error: ' + e.error);
       return;
     }
     var x = e.heading.x;
@@ -34,7 +88,7 @@ if (Titanium.Geolocation.hasCompass) {
 
   var headingChange = function(e) {
     if (e.error) {
-      Titanium.API.info("error: " + e.error);
+      alert('error: ' + e.error);
       return;
     }
 
@@ -62,23 +116,36 @@ var northEstimate = Ti.UI.createAlertDialog({
 });
 northEstimate.addEventListener('click', function(event) {
   if (event.index == 0) {
-    var recordingEstimateIndicator = Ti.UI.createActivityIndicator({ message: "Sending your north estimate to the server..." });
-    recordingEstimateIndicator.show();
-    params = {'direction_distance_estimate[landmark_visit_id]': Ti.App.currentLandmarkVisitId, 
-              'direction_distance_estimate[start_landmark_id]': Ti.App.currentLandmark.id, 
-              'direction_distance_estimate[kind]': 'landmarkToNorth',
-              'direction_distance_estimate[direction_estimate]': trueHeading};
-    CogSurver.request("POST", "direction_distance_estimates", params, function(event) {
-      recordingEstimateIndicator.hide();
-      Titanium.Geolocation.removeEventListener('heading', headingChange);
-      win.close();
-      Ti.UI.createNotification({
-          duration: 3000,
-          message: "You are done doing estimates at " + Ti.App.currentLandmark.name
-      }).show();
-    }, function() {
-      recordingEstimateIndicator.hide();
-    });
+    if (!trueHeading || trueHeading == 0) {
+      var compassNotWorkingAlert = Ti.UI.createAlertDialog({
+        message: "Your compass doesn't seem to be working. Please try again.",
+        buttonNames: ["OK"]
+      });
+      compassNotWorkingAlert.show();
+      compassNotWorkingAlert.addEventListener('click', function(event) {
+        Titanium.Geolocation.addEventListener('heading', headingChange);
+        northEstimate.show();
+      });
+    }
+    else {
+      var recordingEstimateIndicator = Ti.UI.createActivityIndicator({ message: "Sending your north estimate to the server..." });
+      recordingEstimateIndicator.show();
+      params = {'direction_distance_estimate[landmark_visit_id]': Ti.App.currentLandmarkVisitId, 
+                'direction_distance_estimate[start_landmark_id]': Ti.App.currentLandmark.id, 
+                'direction_distance_estimate[kind]': 'landmarkToNorth',
+                'direction_distance_estimate[direction_estimate]': trueHeading};
+      CogSurver.request("POST", "direction_distance_estimates", params, function(event) {
+        recordingEstimateIndicator.hide();
+        Titanium.Geolocation.removeEventListener('heading', headingChange);
+        win.close();
+        Ti.UI.createNotification({
+            duration: 3000,
+            message: "You are done doing estimates at " + Ti.App.currentLandmark.name
+        }).show();
+      }, function() {
+        recordingEstimateIndicator.hide();
+      });
+    }
   }
 });
 

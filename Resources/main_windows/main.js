@@ -34,8 +34,16 @@ if (Ti.Platform.name == 'android') {
 	
   	var signOutMenuOption = menu.add({ title : 'Sign Out' });
   	signOutMenuOption.addEventListener('click', function(e) {
-      CurrentUser.signOut();
-      win.close();
-  	});
+  	  var signOutAlert = Ti.UI.createAlertDialog({
+  	    title:'Sorry', 
+  	    message:"To finish the sign out process, you're going to need to turn off your phone and then turn it on again.",
+  	    buttonNames: ["OK"]
+  	  });
+  	  signOutAlert.addEventListener('click', function() {
+  	    CurrentUser.signOut();
+        win.close();
+  	  });
+  	  signOutAlert.show();
+	  });
   };
 }

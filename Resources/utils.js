@@ -55,6 +55,7 @@ var CurrentUser = {
     CurrentUser.setId("");
     CurrentUser.setEmail("");
     CurrentUser.setPassword("");
+    CurrentUser.setName("");
     CurrentUser.setDefaultDistanceUnits("");
   }
 };
@@ -157,6 +158,7 @@ var CogSurver = {
       Ti.App.xhr.abort();
     };
     Ti.App.xhr.open(action, CogSurver.url + url + "." + format);
+    Ti.App.xhr.setTimeout(7000);
     Ti.App.xhr.setRequestHeader(
         'Authorization', 
         'Basic ' + Ti.Utils.base64encode(CurrentUser.getEmail()+':'+CurrentUser.getPassword()));
