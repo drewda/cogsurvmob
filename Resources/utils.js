@@ -135,6 +135,14 @@ var Windows = {
       navBarHidden: false
     });
     makeEstimateWindow.open();
+  },
+  accuracy: function() {
+    var accuracyWindow = Titanium.UI.createWindow({
+      title: 'Accuracy',
+      url: "/main_windows/accuracy.js",
+      navBarHidden: false
+    });
+    accuracyWindow.open();
   }
 };
 

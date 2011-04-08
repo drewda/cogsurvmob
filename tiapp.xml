@@ -31,4 +31,6 @@
 	</android>
 	<modules>
 	</modules>
+<!--PRODUCTION: <property name="ti.android.google.map.api.key">0oXJxu-1uL4kU3kgGlRs1gH9Kvr2o8y-6Kbiv7w</property>-->
+<!--TI DEBUG:--><property name="ti.android.google.map.api.key">0oXJxu-1uL4my3AbsJXv0stM36SOTHCRrcwwMng</property>
 </ti:app>

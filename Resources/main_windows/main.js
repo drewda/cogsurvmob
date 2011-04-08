@@ -45,5 +45,11 @@ if (Ti.Platform.name == 'android') {
   	  });
   	  signOutAlert.show();
 	  });
+	  
+  	var accuracyMenuOption = menu.add({ title : 'Check GPS and Compass Accuracy' });
+  	accuracyMenuOption.addEventListener('click', function(e) {
+  	  Windows.accuracy();
+      win.hide();
+	  });
   };
 }

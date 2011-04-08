@@ -33,7 +33,12 @@
         </activity>
 
 		<!-- TI_APPLICATION -->
-		
+		<activity
+    		android:name="ti.modules.titanium.map.TiMapActivity"
+    		android:configChanges="keyboardHidden|orientation"
+    		android:launchMode="singleTask"
+    	/>
+  	<uses-library android:name="com.google.android.maps" />
 		<activity
         	android:name="org.appcelerator.titanium.TiActivity"
         	android:configChanges="keyboardHidden|orientation"
@@ -56,6 +61,7 @@
 			android:exported="false"
 		/>
 		
+    <uses-library android:name="com.google.android.maps" />
 
 	</application>
 	
@@ -66,6 +72,5 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	
-	
+		
 </manifest>
